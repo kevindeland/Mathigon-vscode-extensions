@@ -12,7 +12,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 		const vary = 'null';
 
-		vscode.workspace.openTextDocument()
+		vscode.workspace.openTextDocument();
 		vscode.window.showInformationMessage(`${vary}`);
 
 	});
@@ -44,12 +44,15 @@ export function activate(context: vscode.ExtensionContext) {
 
 		const filepath = array.join('/');
 
+		const currentLine = vscode.window.activeTextEditor?.selection.active.line;
+		vscode.window.showInformationMessage(`${currentLine}`);
 
 		if (filename?.toString() === 'content.md') {
 			vscode.window.showInformationMessage(`${filename}`);
 
 			vscode.workspace.openTextDocument(filepath.concat('/functions.ts')).then(doc => {
-				vscode.window.showTextDocument(doc);
+				const options = {selection: new vscode.Range(3,0,5,0)};
+				vscode.window.showTextDocument(doc, options);
 			});
 		} else if (filename?.toString() === 'functions.ts') {
 			vscode.window.showInformationMessage(`${filename}`);
