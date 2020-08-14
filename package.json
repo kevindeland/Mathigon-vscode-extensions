@@ -13,7 +13,7 @@
 		"onCommand:helloworld.helloWorld",
 		"onCommand:helloworld.printVars",
 		"onCommand:helloworld.reverse",
-		"onCommand:helloworld.filename",
+		"onCommand:helloworld.stepFinder",
 		"onCommand:helloworld.defProvider",
 		"onLanguage:markdown"
 	],
@@ -33,8 +33,8 @@
 				"title": "Reverser"
 			},
 			{
-				"command": "helloworld.filename",
-				"title": "Mathigon Filename"
+				"command": "helloworld.stepFinder",
+				"title": "Mathigon Step Finder"
 			},
 			{
 				"command": "helloworld.defProvider",

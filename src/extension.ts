@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 
-import { findContentSectionId, findIdLocationInFunctions, findIdRangeInFunctions } from './utils';
+import { findFunctionsSectionId, findContentSectionId, findIdLocationInFunctions,
+	findIdRangeInFunctions, findIdRangeInContent } from './utils';
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -42,37 +43,41 @@ export function activate(context: vscode.ExtensionContext) {
 	 * If in content.md, looks for containing `id` and goes to function with the same name.
 	 * If in functions.ts, looks for containing exported `function` and goes to markdown section with same name.
 	 */
-	let filename = vscode.commands.registerCommand('helloworld.filename', () => {
+	let filename = vscode.commands.registerCommand('helloworld.stepFinder', () => {
 		const editor = vscode.window.activeTextEditor;
 
-		const uri = editor?.document.uri;
 		const document = editor?.document!;
 		const fullFilePath = document?.fileName;
 		
-		let array = fullFilePath?.split('/')!;
-		const filename = array.pop();
+		let path = fullFilePath?.split('/')!;
+		const filename = path.pop();
 
-		const filepath = array.join('/');
+		const filepath = path.join('/');
 
 		const currentLine = vscode.window.activeTextEditor?.selection.active.line!;
-		const id = findContentSectionId(document, currentLine);
-		// console.log(`found id: ${id}`);
 
 		if (filename?.toString() === 'content.md') {
-			// POPUP: Informational message
-			// vscode.window.showInformationMessage(`${filename}`);
+			vscode.window.showInformationMessage('Switching from content.md to functions.ts');
+
+			const id = findContentSectionId(document, currentLine);
 
 			vscode.workspace.openTextDocument(filepath.concat('/functions.ts')).then(doc => {
 				const options = {selection: findIdRangeInFunctions(doc, id)};
 				vscode.window.showTextDocument(doc, options);
 			});
+
+
 		} else if (filename?.toString() === 'functions.ts') {
-			// POPUP: More informative
-			vscode.window.showInformationMessage(`${filename}`);
+			vscode.window.showInformationMessage('Switching from functions.ts to content.md');
+
+			const id = findFunctionsSectionId(document, currentLine);
 
 			vscode.workspace.openTextDocument(filepath.concat('/content.md')).then(doc => {
-				vscode.window.showTextDocument(doc);
+				const options = {selection: findIdRangeInContent(doc, id)};
+				vscode.window.showTextDocument(doc, options);
 			});
+
+
 		} else {
 			vscode.window.showWarningMessage(`${filename} is not the correct file type.`);
 		}
@@ -86,10 +91,10 @@ export function activate(context: vscode.ExtensionContext) {
 
 			const fullFilePath = document?.fileName;
 
-			let array = fullFilePath?.split('/')!;
-			const filename = array.pop();
+			let path = fullFilePath?.split('/')!;
+			const filename = path.pop();
 
-			const filepath = array.join('/');
+			const filepath = path.join('/');
 
 			const currentLine = vscode.window.activeTextEditor?.selection.active.line!;
 
@@ -112,8 +117,6 @@ export function activate(context: vscode.ExtensionContext) {
 					console.log(`inside: ${resultX}`);
 					return resultX;
 				});
-
-				console.log(`outside: ${resultX}`);
 			}
 		}
 

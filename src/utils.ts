@@ -1,5 +1,10 @@
 import * as vscode from 'vscode';
 
+
+const SEARCH = {
+  contentId: '> id: ',
+}
+
 /**
  * Given a document and a line, give the id of the containing section.
  * @param doc content.md document
@@ -7,18 +12,38 @@ import * as vscode from 'vscode';
  */
 export function findContentSectionId(doc: vscode.TextDocument, line: number): string {
 
-  // CLEAN: put this in a CONST or something.
-  const searchText = "> id: ";
-
   let found = false;
   while (!found && line > -1) {
     const currentLine = doc.lineAt(line).text;
-    if (currentLine.includes(searchText)) {
-      return currentLine.substr(currentLine.indexOf(searchText)+searchText.length);
+    if (currentLine.includes(SEARCH.contentId)) {
+      return currentLine.substr(currentLine.indexOf(SEARCH.contentId)+SEARCH.contentId.length);
     }
     line--;
   }
   return '';
+}
+
+/**
+ * When in functions.ts, find the id of the containing function (actually the next highest line).
+ *
+ * @param doc
+ * @param line
+ */
+export function findFunctionsSectionId(doc: vscode.TextDocument, line: number): string {
+
+  const s2: RegExp = /^export (?:async )?function ([a-zA-Z][a-zA-Z0-9_]*?)\((.*)\: Step\)/;
+
+  while (line > -1) {
+    const currentLine = doc.lineAt(line).text;
+    let arr = s2.exec(currentLine);
+    if(arr) {
+      console.log(arr);
+      return arr[1];
+    }
+    line--;
+  }
+
+  throw Error('No ID found.');
 }
 
 /**
@@ -108,4 +133,31 @@ export function findIdRangeInFunctions(doc: vscode.TextDocument, id: string): vs
   }
 
   throw Error('Not found');
+}
+
+/**
+ * Look for an ID in the content.md file, return its Range.
+ *
+ * @param doc
+ * @param id
+ */
+export function findIdRangeInContent(doc: vscode.TextDocument, id: string): vscode.Range {
+
+  const searchText: RegExp = new RegExp(`${SEARCH.contentId}\s*(${id})`);
+  console.log(searchText);
+
+  let lineNum = 0, currentLine, find;
+  while (lineNum < doc.lineCount) {
+    currentLine = doc.lineAt(lineNum).text;
+
+    if (find = searchText.exec(currentLine)) {
+      console.log(`Found id ${find[1]} at line ${lineNum}`);
+
+      return new vscode.Range(lineNum, 0, lineNum, 0);
+    }
+
+    lineNum++;
+  }
+
+  throw Error('ID not found in Content.md');
 }
