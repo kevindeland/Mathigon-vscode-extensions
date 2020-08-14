@@ -13,7 +13,9 @@
 		"onCommand:helloworld.helloWorld",
 		"onCommand:helloworld.printVars",
 		"onCommand:helloworld.reverse",
-		"onCommand:helloworld.filename"
+		"onCommand:helloworld.filename",
+		"onCommand:helloworld.defProvider",
+		"onLanguage:markdown"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -32,7 +34,11 @@
 			},
 			{
 				"command": "helloworld.filename",
-				"title": "FRUITBOY"
+				"title": "Mathigon Filename"
+			},
+			{
+				"command": "helloworld.defProvider",
+				"title": "DEF_PROVIDER"
 			}
 		]
 	},
