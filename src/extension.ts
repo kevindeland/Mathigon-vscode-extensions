@@ -1,5 +1,6 @@
-
 import * as vscode from 'vscode';
+
+import { findContentSectionId, findIdLocationInFunctions, findIdRangeInFunctions } from './utils';
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -36,107 +37,11 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
-
 	/**
-	 * Given a document and a line, give the id of the containing section.
-	 * @param doc content.md document
-	 * @param line current line.
+	 * Switch between content.md to functions.ts, and jump to complementary location in code.
+	 * If in content.md, looks for containing `id` and goes to function with the same name.
+	 * If in functions.ts, looks for containing exported `function` and goes to markdown section with same name.
 	 */
-	function findContentSectionId(doc: vscode.TextDocument, line: number): string {
-
-		const searchText = "> id: ";
-
-		let found = false;
-		while (!found && line > -1) {
-			const currentLine = doc.lineAt(line).text;
-			if (currentLine.includes(searchText)) {
-				return currentLine.substr(currentLine.indexOf(searchText)+searchText.length);
-			}
-			line--;
-		}
-		return '';
-	}
-
-	function findIdLocationInFunctions(doc: vscode.TextDocument, id: string): vscode.Location {
-
-		// first convert from this-convention to thisConvention.
-		let toCamelCase = "";
-		// easier way: only find instances of '-' (but it's gonna iterate anyways)
-		let nextUpper = false;
-		for (let i=0; i < id.length; i++) {
-			if (id.charAt(i) === '-') {
-				nextUpper = true;
-			} else {
-				toCamelCase += nextUpper ? id.charAt(i).toUpperCase() : id.charAt(i);
-				nextUpper = false;
-			}
-		}
-
-		const searchText = "export function " + toCamelCase;
-
-		// iterate til you find the right line.
-		// TODO: need exception for when there's no function.
-		let lineNum = 0;
-		while (lineNum < doc.lineCount) {
-
-			const currentLine = doc.lineAt(lineNum).text;
-			if (currentLine.includes(searchText)) {
-
-				// TODO: should also handle "export async function" (or just function).
-				// TODO: beware of functions with same beginnings e.g. pythagoras and pythagorasProof
-				const beginLine = "export function ".length;;
-				const endLine = beginLine + toCamelCase.length;
-				return new vscode.Location(doc.uri, new vscode.Range(lineNum, beginLine, lineNum, endLine));
-			}
-			lineNum++;
-		}
-		throw Error('Not found');
-	}
-
-	/**
-	 * Given a document for functions.ts, find the location of id and return its Range.
-	 *
-	 * @param doc functions.ts document
-	 * @param id section id.
-	 */
-	function findIdRangeInFunctions(doc: vscode.TextDocument, id: string): vscode.Range {
-
-		// first convert from this-convention to thisConvention.
-		let toCamelCase = "";
-		// easier way: only find instances of '-' (but it's gonna iterate anyways)
-		let nextUpper = false;
-		for (let i=0; i < id.length; i++) {
-			if (id.charAt(i) === '-') {
-				nextUpper = true;
-			} else {
-				toCamelCase += nextUpper ? id.charAt(i).toUpperCase() : id.charAt(i);
-				nextUpper = false;
-			}
-		}
-
-		const searchText = "export function " + toCamelCase;
-
-		// iterate til you find the right line.
-		// TODO: need exception for when there's no function.
-		let lineNum = 0;
-		while (lineNum < doc.lineCount) {
-
-			const currentLine = doc.lineAt(lineNum).text;
-			if (currentLine.includes(searchText)) {
-
-				// TODO: should also handle "export async function" (or just function).
-				// TODO: beware of functions with same beginnings e.g. pythagoras and pythagorasProof
-				const beginLine = "export function ".length;;
-				const endLine = beginLine + toCamelCase.length;
-				return new vscode.Range(lineNum,beginLine,lineNum,endLine);
-			}
-			lineNum++;
-		}
-
-		throw Error('Not found');
-	}
-
-
 	let filename = vscode.commands.registerCommand('helloworld.filename', () => {
 		const editor = vscode.window.activeTextEditor;
 
@@ -151,18 +56,18 @@ export function activate(context: vscode.ExtensionContext) {
 
 		const currentLine = vscode.window.activeTextEditor?.selection.active.line!;
 		const id = findContentSectionId(document, currentLine);
-		console.log(`found id: ${id}`);
-
-		vscode.window.showInformationMessage(`${currentLine}`);
+		// console.log(`found id: ${id}`);
 
 		if (filename?.toString() === 'content.md') {
-			vscode.window.showInformationMessage(`${filename}`);
+			// POPUP: Informational message
+			// vscode.window.showInformationMessage(`${filename}`);
 
 			vscode.workspace.openTextDocument(filepath.concat('/functions.ts')).then(doc => {
 				const options = {selection: findIdRangeInFunctions(doc, id)};
 				vscode.window.showTextDocument(doc, options);
 			});
 		} else if (filename?.toString() === 'functions.ts') {
+			// POPUP: More informative
 			vscode.window.showInformationMessage(`${filename}`);
 
 			vscode.workspace.openTextDocument(filepath.concat('/content.md')).then(doc => {
@@ -195,6 +100,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 			console.log('Inside of the definition provider');
 
+			// CLEAN: would be better to use regex, I suppose
 			if (lineText.startsWith(searchText)) {
 				const id =  lineText.substr(lineText.indexOf(searchText)+searchText.length);
 				console.log(`found an id ${id}`);
