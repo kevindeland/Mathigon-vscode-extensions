@@ -22,17 +22,17 @@ export function findContentSectionId(doc: vscode.TextDocument, line: number): st
 }
 
 /**
- * Given a document for functions.ts, find the location of id and return its Range.
- *
- * @param doc functions.ts document
- * @param id section id.
+ * Convert Step ID from its Markdown syntax to Typescript.
+ * Markdown: like-this
+ * Typscript: likeThis
+ * 
+ * @param id
  */
-export function findIdLocationInFunctions(doc: vscode.TextDocument, id: string): vscode.Location {
-
-  // CLEAN: this should be one function
-  // first convert from this-convention to thisConvention.
+function idMarkdownToTypescript(id: string): string {
+  
   let toCamelCase = "";
-  // easier way: only find instances of '-' (but it's gonna iterate anyways)
+  
+  // easier way? Only find instances of '-' (but it's gonna iterate anyways)
   let nextUpper = false;
   for (let i=0; i < id.length; i++) {
     if (id.charAt(i) === '-') {
@@ -43,7 +43,20 @@ export function findIdLocationInFunctions(doc: vscode.TextDocument, id: string):
     }
   }
 
-  const searchText = "export function " + toCamelCase;
+  return toCamelCase;
+}
+
+/**
+ * Given a document for functions.ts, find the location of id and return its Range.
+ *
+ * @param doc functions.ts document
+ * @param id section id.
+ */
+export function findIdLocationInFunctions(doc: vscode.TextDocument, id: string): vscode.Location {
+
+  const idTs = idMarkdownToTypescript(id);
+
+  const searchText = "export function " + idTs;
 
   // iterate til you find the right line.
   // TODO: need exception for when there's no function.
@@ -56,7 +69,7 @@ export function findIdLocationInFunctions(doc: vscode.TextDocument, id: string):
       // TODO: should also handle "export async function" (or just function).
       // TODO: beware of functions with same beginnings e.g. pythagoras and pythagorasProof
       const beginLine = "export function ".length;;
-      const endLine = beginLine + toCamelCase.length;
+      const endLine = beginLine + idTs.length;
       return new vscode.Location(doc.uri, new vscode.Range(lineNum, beginLine, lineNum, endLine));
     }
     lineNum++;
@@ -73,19 +86,9 @@ export function findIdLocationInFunctions(doc: vscode.TextDocument, id: string):
 export function findIdRangeInFunctions(doc: vscode.TextDocument, id: string): vscode.Range {
 
   // first convert from this-convention to thisConvention.
-  let toCamelCase = "";
-  // easier way: only find instances of '-' (but it's gonna iterate anyways)
-  let nextUpper = false;
-  for (let i=0; i < id.length; i++) {
-    if (id.charAt(i) === '-') {
-      nextUpper = true;
-    } else {
-      toCamelCase += nextUpper ? id.charAt(i).toUpperCase() : id.charAt(i);
-      nextUpper = false;
-    }
-  }
+  const idTs = idMarkdownToTypescript(id);
 
-  const searchText = "export function " + toCamelCase;
+  const searchText = "export function " + idTs;
 
   // iterate til you find the right line.
   // TODO: need exception for when there's no function.
@@ -98,7 +101,7 @@ export function findIdRangeInFunctions(doc: vscode.TextDocument, id: string): vs
       // TODO: should also handle "export async function" (or just function).
       // TODO: beware of functions with same beginnings e.g. pythagoras and pythagorasProof
       const beginLine = "export function ".length;;
-      const endLine = beginLine + toCamelCase.length;
+      const endLine = beginLine + idTs.length;
       return new vscode.Range(lineNum,beginLine,lineNum,endLine);
     }
     lineNum++;
