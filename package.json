@@ -15,7 +15,8 @@
 		"onCommand:helloworld.reverse",
 		"onCommand:helloworld.stepFinder",
 		"onCommand:helloworld.defProvider",
-		"onLanguage:markdown"
+		"onLanguage:markdown",
+		"onLanguage:typescript"
 	],
 	"main": "./out/extension.js",
 	"contributes": {

@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 
-import { findFunctionsSectionId, findContentSectionId, findIdLocationInFunctions,
+import { findFunctionsSectionId, findContentSectionId,
+	findIdLocationInFunctions, findIdLocationInContent,
 	findIdRangeInFunctions, findIdRangeInContent } from './utils';
 
 export function activate(context: vscode.ExtensionContext) {
@@ -85,25 +86,21 @@ export function activate(context: vscode.ExtensionContext) {
 
 	});
 
-	let defProvider = vscode.languages.registerDefinitionProvider('markdown', {
+	/**
+	 * Register a Definition for IDs used in content.md
+	 */
+	let markdownDef = vscode.languages.registerDefinitionProvider('markdown', {
 
 		provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Location | vscode.Location[] | vscode.LocationLink[]> {
 
 			const fullFilePath = document?.fileName;
 
 			let path = fullFilePath?.split('/')!;
-			const filename = path.pop();
-
+			path.pop();
 			const filepath = path.join('/');
-
-			const currentLine = vscode.window.activeTextEditor?.selection.active.line!;
-
-			vscode.window.showInformationMessage(`${currentLine}`);
 
 			const lineText = document.lineAt(position.line).text;
 			const searchText = '> id: ';
-
-			console.log('Inside of the definition provider');
 
 			// CLEAN: would be better to use regex, I suppose
 			if (lineText.startsWith(searchText)) {
@@ -122,12 +119,46 @@ export function activate(context: vscode.ExtensionContext) {
 
 	});
 
+	/**
+	 * Register a definition for IDs used in functions.ts
+	 */
+	let typescriptDef = vscode.languages.registerDefinitionProvider('typescript', {
+
+		provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Location | vscode.Location[] | vscode.LocationLink[]> {
+			console.log('In def provider for TS');
+
+			const fullFilePath = document?.fileName;
+			let path = fullFilePath?.split('/')!;
+			path.pop();
+			const filepath = path.join('/');
+			const targetFile = filepath.concat('/content.md');
+
+			const currentLine = vscode.window.activeTextEditor?.selection.active.line;
+			const lineText = document.lineAt(position.line).text;
+
+			const s2: RegExp = /^export (?:async )?function ([a-zA-Z][a-zA-Z0-9_]*?)\((.*)\: Step\)/;
+
+			let arr = s2.exec(lineText);
+			if (arr) {
+				const id = arr[1];
+				console.log(`found an id ${id}`);
+
+				return vscode.workspace.openTextDocument(targetFile).then(doc => {
+					const resultX = findIdLocationInContent(doc, id);
+					console.log(resultX);
+					return resultX;
+				});
+			}
+		}
+	});
+
+
 	vscode.languages.registerHoverProvider('typescript', {
 		provideHover(doc: vscode.TextDocument) {
 			return new vscode.Hover(`Mission Accomplished`);
 		}
 	})
 
-	context.subscriptions.push(reverser, disposable, disp2, filename, defProvider);
+	context.subscriptions.push(reverser, disposable, disp2, filename, markdownDef, typescriptDef);
 }
 export function deactivate() {}

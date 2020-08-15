@@ -72,6 +72,47 @@ function idMarkdownToTypescript(id: string): string {
 }
 
 /**
+ * Convert Step ID from its Typescript syntax to Markdown.
+ * Typscript: likeThis
+ * Markdown: like-this
+ * 
+ * @param id
+ */
+function idTypescriptToMarkdown(id: string): string {
+  // TODO: this is needed for IDs with more than one word.
+
+  return 'TODO';
+}
+
+/**
+ * Find an ID in the content.md file.
+ *
+ * @param doc
+ * @param id
+ */
+export function findIdLocationInContent(doc: vscode.TextDocument, id: string): vscode.Location {
+  const searchText: RegExp = new RegExp(`${SEARCH.contentId}\s*(${id})`);
+  console.log(searchText);
+
+  let lineNum = 0, currentLine, find;
+  while (lineNum < doc.lineCount) {
+    currentLine = doc.lineAt(lineNum).text;
+
+    if (find = searchText.exec(currentLine)) {
+      console.log(`Found id ${find[1]} at line ${lineNum}`);
+
+      // CLEAN: this code kinda redundant w/ findIdRangeInContent.
+      // Should just return a Range always, and the caller can convert to Location.
+      return new vscode.Location(doc.uri, new vscode.Range(lineNum, 0, lineNum, 0));
+    }
+
+    lineNum++;
+  }
+
+  throw Error('ID not found in Content.md');
+}
+
+/**
  * Given a document for functions.ts, find the location of id and return its Range.
  *
  * @param doc functions.ts document
