@@ -2,7 +2,8 @@ import * as vscode from 'vscode';
 
 import { findFunctionsSectionId, findContentSectionId,
 	findIdLocationInFunctions, findIdLocationInContent,
-	findIdRangeInFunctions, findIdRangeInContent } from './utils';
+	findIdRangeInFunctions, findIdRangeInContent,
+	findGlossaryRange } from './utils';
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -152,6 +153,41 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
+	let glossDef = vscode.languages.registerDefinitionProvider('markdown', {
+
+		provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Location | vscode.Location[] | vscode.LocationLink[]> {
+
+			const fullFilePath = document?.fileName;
+
+			let path = fullFilePath?.split('/')!;
+			path.pop(); // pop content.md
+			path.pop(); // pop course folder
+
+			let filepath = path.join('/');
+
+			// looks for lowercases and dashes
+			const glossSyntax = new RegExp(`\(gloss:([a-z\-]+)\)`);
+
+			let find;
+			if (find = glossSyntax.exec(document.lineAt(position.line).text)) {
+
+				// i don't know why it's capturing gloss:term
+				const id = find[2];
+				// console.log(`Found glossary term ${id}`);
+				// console.log(find);
+
+				filepath = filepath.concat('/shared/glossary.yaml');
+				// console.log(filepath);
+				return vscode.workspace.openTextDocument(filepath).then(doc => {
+
+					const glossaryRange = findGlossaryRange(doc, id);
+					return new vscode.Location(doc.uri, glossaryRange);
+				});
+			}
+		}
+
+	});
+
 
 	vscode.languages.registerHoverProvider('typescript', {
 		provideHover(doc: vscode.TextDocument) {
@@ -159,6 +195,6 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	})
 
-	context.subscriptions.push(reverser, disposable, disp2, filename, markdownDef, typescriptDef);
+	context.subscriptions.push(reverser, disposable, disp2, filename, markdownDef, typescriptDef, glossDef);
 }
 export function deactivate() {}

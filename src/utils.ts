@@ -202,3 +202,21 @@ export function findIdRangeInContent(doc: vscode.TextDocument, id: string): vsco
 
   throw Error('ID not found in Content.md');
 }
+
+export function findGlossaryRange(doc: vscode.TextDocument, id: string): vscode.Range {
+
+  const searchText: RegExp = new RegExp(`^(${id}):`);
+
+  let lineNum = 0, currentLine, find;
+  while (lineNum < doc.lineCount) {
+    currentLine = doc.lineAt(lineNum).text;
+
+    if (find = searchText.exec(currentLine)) {
+      return new vscode.Range(lineNum, 0, lineNum, 0);
+    }
+
+    lineNum++;
+  }
+
+  throw Error(`ID ${id} not found in ${doc.uri}.`);
+}
