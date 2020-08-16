@@ -161,16 +161,31 @@ export function activate(context: vscode.ExtensionContext) {
 			let filepath = path.join('/');
 
 			// looks for lowercases and dashes
-			const glossSyntax = new RegExp(`\(gloss:([a-z\-]+)\)`);
+			const glossSyntax = new RegExp(`\(gloss:([a-z\-]+)\)`);			
+
+			// okay so the current character has to be within the term for gloss.
+			// Gotta look behind and also look ahead...
+
+			// TODO: this should not highlight the whole line, only the (gloss:term) part.
+			const line = document.lineAt(position.line).text;
+			// console.log(`CHAR: ${line.charAt(position.character)}`);
 
 			let find;
-			if (find = glossSyntax.exec(document.lineAt(position.line).text)) {
-
+			if (find = glossSyntax.exec(line)) {
 				// i don't know why it's capturing gloss:term
 				const id = find[2];
 				// console.log(`Found glossary term ${id}`);
 				// console.log(find);
 
+				const firstChar = line.indexOf(find[0]);
+				const lastChar = firstChar + find[0].length;
+				if (
+					firstChar > position.character || 
+					lastChar <= position.character
+				) {
+					return;
+				}
+					
 				filepath = filepath.concat('/shared/glossary.yaml');
 				// console.log(filepath);
 				return vscode.workspace.openTextDocument(filepath).then(doc => {
