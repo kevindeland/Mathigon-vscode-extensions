@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 
 import { findFunctionsSectionId, findContentSectionId,
 	findIdRangeInFunctions, findIdRangeInContent,
-	findGlossaryRange } from './utils';
+	findYamlDefRange } from './utils';
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -161,15 +161,16 @@ export function activate(context: vscode.ExtensionContext) {
 			let filepath = path.join('/');
 
 			// looks for lowercases and dashes
-			const glossSyntax = new RegExp(`\(gloss:([a-z\-]+)\)`);			
+			const glossSyntax = new RegExp(`\(gloss:([a-z\-]+)\)`);
+			const bioSyntax = new RegExp(`\(bio:([a-z\-]+)\)`);
 
 			// okay so the current character has to be within the term for gloss.
 			// Gotta look behind and also look ahead...
 
-			// TODO: this should not highlight the whole line, only the (gloss:term) part.
 			const line = document.lineAt(position.line).text;
 			// console.log(`CHAR: ${line.charAt(position.character)}`);
 
+			// TODO: refactor into a single function that takes a filename
 			let find;
 			if (find = glossSyntax.exec(line)) {
 				// i don't know why it's capturing gloss:term
@@ -180,18 +181,39 @@ export function activate(context: vscode.ExtensionContext) {
 				const firstChar = line.indexOf(find[0]);
 				const lastChar = firstChar + find[0].length;
 				if (
-					firstChar > position.character || 
+					firstChar > position.character ||
 					lastChar <= position.character
 				) {
 					return;
 				}
-					
+
 				filepath = filepath.concat('/shared/glossary.yaml');
 				// console.log(filepath);
 				return vscode.workspace.openTextDocument(filepath).then(doc => {
 
-					const glossaryRange = findGlossaryRange(doc, id);
+					const glossaryRange = findYamlDefRange(doc, id);
 					return new vscode.Location(doc.uri, glossaryRange);
+				});
+			}
+
+			if (find = bioSyntax.exec(line)) {
+				const id = find[2];
+
+				const firstChar = line.indexOf(find[0]);
+				const lastChar = firstChar + find[0].length;
+				if (
+					firstChar > position.character ||
+					lastChar <= position.character
+				) {
+					return;
+				}
+
+				filepath = filepath.concat('/shared/bios.yaml');
+				// console.log(filepath);
+				return vscode.workspace.openTextDocument(filepath).then(doc => {
+
+					const bioRange = findYamlDefRange(doc, id);
+					return new vscode.Location(doc.uri, bioRange);
 				});
 			}
 		}

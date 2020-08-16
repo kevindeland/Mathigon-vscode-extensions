@@ -144,7 +144,7 @@ export function findIdRangeInContent(doc: vscode.TextDocument, id: string): vsco
   throw Error('ID not found in Content.md');
 }
 
-export function findGlossaryRange(doc: vscode.TextDocument, id: string): vscode.Range {
+export function findYamlDefRange(doc: vscode.TextDocument, id: string): vscode.Range {
 
   const searchText: RegExp = new RegExp(`^(${id}):`);
 
