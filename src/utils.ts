@@ -85,65 +85,6 @@ function idTypescriptToMarkdown(id: string): string {
 }
 
 /**
- * Find an ID in the content.md file.
- *
- * @param doc
- * @param id
- */
-export function findIdLocationInContent(doc: vscode.TextDocument, id: string): vscode.Location {
-  const searchText: RegExp = new RegExp(`${SEARCH.contentId}\s*(${id})`);
-  console.log(searchText);
-
-  let lineNum = 0, currentLine, find;
-  while (lineNum < doc.lineCount) {
-    currentLine = doc.lineAt(lineNum).text;
-
-    if (find = searchText.exec(currentLine)) {
-      console.log(`Found id ${find[1]} at line ${lineNum}`);
-
-      // CLEAN: this code kinda redundant w/ findIdRangeInContent.
-      // Should just return a Range always, and the caller can convert to Location.
-      return new vscode.Location(doc.uri, new vscode.Range(lineNum, 0, lineNum, 0));
-    }
-
-    lineNum++;
-  }
-
-  throw Error('ID not found in Content.md');
-}
-
-/**
- * Given a document for functions.ts, find the location of id and return its Range.
- *
- * @param doc functions.ts document
- * @param id section id.
- */
-export function findIdLocationInFunctions(doc: vscode.TextDocument, id: string): vscode.Location {
-
-  const idTs = idMarkdownToTypescript(id);
-
-  const searchText = "export function " + idTs;
-
-  // iterate til you find the right line.
-  // TODO: need exception for when there's no function.
-  let lineNum = 0;
-  while (lineNum < doc.lineCount) {
-
-    const currentLine = doc.lineAt(lineNum).text;
-    if (currentLine.includes(searchText)) {
-
-      // TODO: should also handle "export async function" (or just function).
-      // TODO: beware of functions with same beginnings e.g. pythagoras and pythagorasProof
-      const beginLine = "export function ".length;;
-      const endLine = beginLine + idTs.length;
-      return new vscode.Location(doc.uri, new vscode.Range(lineNum, beginLine, lineNum, endLine));
-    }
-    lineNum++;
-  }
-  throw Error('Not found');
-}
-
-/**
  * Given a document for functions.ts, find the location of id and return its Range.
  *
  * @param doc functions.ts document

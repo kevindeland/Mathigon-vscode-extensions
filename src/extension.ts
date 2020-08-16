@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 
 import { findFunctionsSectionId, findContentSectionId,
-	findIdLocationInFunctions, findIdLocationInContent,
 	findIdRangeInFunctions, findIdRangeInContent,
 	findGlossaryRange } from './utils';
 
@@ -108,12 +107,9 @@ export function activate(context: vscode.ExtensionContext) {
 				const id =  lineText.substr(lineText.indexOf(searchText)+searchText.length);
 				console.log(`found an id ${id}`);
 
-				let resultX;
 				return vscode.workspace.openTextDocument(filepath.concat('/functions.ts')).then(doc => {
-					console.log('opened new document');
-					resultX = findIdLocationInFunctions(doc, id);
-					console.log(`inside: ${resultX}`);
-					return resultX;
+					const range = findIdRangeInFunctions(doc, id);
+					return new vscode.Location(doc.uri, range);
 				});
 			}
 		}
@@ -145,9 +141,8 @@ export function activate(context: vscode.ExtensionContext) {
 				console.log(`found an id ${id}`);
 
 				return vscode.workspace.openTextDocument(targetFile).then(doc => {
-					const resultX = findIdLocationInContent(doc, id);
-					console.log(resultX);
-					return resultX;
+					const range = findIdRangeInContent(doc, id);
+					return new vscode.Location(doc.uri, range);
 				});
 			}
 		}
