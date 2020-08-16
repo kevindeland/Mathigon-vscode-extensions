@@ -10,9 +10,6 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:helloworld.helloWorld",
-		"onCommand:helloworld.printVars",
-		"onCommand:helloworld.reverse",
 		"onCommand:helloworld.stepFinder",
 		"onCommand:helloworld.defProvider",
 		"onLanguage:markdown",
@@ -21,18 +18,6 @@
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
-			{
-				"command": "helloworld.helloWorld",
-				"title": "Hello World"
-			},
-			{
-				"command": "helloworld.printVars",
-				"title": "Print Vars"
-			},
-			{
-				"command": "helloworld.reverse",
-				"title": "Reverser"
-			},
 			{
 				"command": "helloworld.stepFinder",
 				"title": "Mathigon Step Finder"

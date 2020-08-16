@@ -6,39 +6,6 @@ import { findFunctionsSectionId, findContentSectionId,
 
 export function activate(context: vscode.ExtensionContext) {
 
-	let disposable = vscode.commands.registerCommand('helloworld.helloWorld', () => {
-		vscode.window.showInformationMessage('Hello VS Code!');
-	});
-
-	let disp2 = vscode.commands.registerCommand('helloworld.printVars', () => {
-
-		console.log('printing vars');
-		let vary = 'null';
-
-		const editor = vscode.window.activeTextEditor;
-		const document = editor?.document;
-		vary = document?.languageId!;
-
-		vscode.workspace.openTextDocument();
-		vscode.window.showInformationMessage(`${vary}`);
-
-	});
-
-	let reverser = vscode.commands.registerCommand('helloworld.reverse', () => {
-		const editor = vscode.window.activeTextEditor;
-
-		if (editor) {
-			const document = editor.document;
-			const selection = editor.selection;
-			
-			const word = document.getText(selection);
-			const reversed = word.split('').reverse().join('');
-			editor.edit(editBuilder => {
-				editBuilder.replace(selection, reversed);
-			});
-		}
-	});
-
 	/**
 	 * Switch between content.md to functions.ts, and jump to complementary location in code.
 	 * If in content.md, looks for containing `id` and goes to function with the same name.
@@ -227,6 +194,6 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	})
 
-	context.subscriptions.push(reverser, disposable, disp2, filename, markdownDef, typescriptDef, glossDef);
+	context.subscriptions.push(filename, markdownDef, typescriptDef, glossDef);
 }
 export function deactivate() {}
