@@ -1,8 +1,8 @@
 {
-	"name": "helloworld",
-	"displayName": "HelloWorld",
+	"name": "mathigon-vscode",
+	"displayName": "Mathigon VSCode",
 	"description": "",
-	"version": "0.0.1",
+	"version": "1.0.0",
 	"engines": {
 		"vscode": "^1.47.0"
 	},
@@ -10,8 +10,7 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:helloworld.stepFinder",
-		"onCommand:helloworld.defProvider",
+		"onCommand:mathigon.stepFinder",
 		"onLanguage:markdown",
 		"onLanguage:typescript"
 	],
@@ -19,12 +18,8 @@
 	"contributes": {
 		"commands": [
 			{
-				"command": "helloworld.stepFinder",
+				"command": "mathigon.stepFinder",
 				"title": "Mathigon Step Finder"
-			},
-			{
-				"command": "helloworld.defProvider",
-				"title": "DEF_PROVIDER"
 			}
 		]
 	},

@@ -1,65 +1,55 @@
-# helloworld README
+# Mathigon VS Code Extension
 
-This is the README for your extension "helloworld". After writing up a brief description, we recommend including the following sections.
+This is an Extension for [Visual Studio Code](https://code.visualstudio.com/) to help navigate the code for [Mathigon textbooks](https://github.com/mathigon/textbooks).
+
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
 
-For example if there is an image subfolder under your extension project workspace:
+### Step Definition Jumping
+When editing a *content.md* markdown file, you can use the [Go to Definition](https://code.visualstudio.com/Docs/editor/editingevolved#_go-to-definition) command on a Step's ID to navigate to the function where that Step's JavaScript defined. 
 
-\!\[feature X\]\(images/feature-x.png\)
+When the cursor is over the id, there are two ways to navigate to the definition:
+    
+- press `F12`
+- hold `Option` (Mac) or `Ctrl` (PC) and click
+![feature Step ID Definition](images/medians-content-1.gif)
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+You can also hold `Option` (Mac) or `Ctrl` (PC) and hover the mouse over the ID to see a preview of the function. 
 
-## Requirements
+![feature Step ID Definition](images/medians-content-2.gif)
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
 
-## Extension Settings
+### Glossary Definition Lookup.
+When editing a *content.md* markdown file, you can use the [Go to Definition](https://code.visualstudio.com/Docs/editor/editingevolved#_go-to-definition) command to jump to or preview a term's definition in the glossary.
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+Press `F12` or hold `Option` and click on a glossary term to jump to its definition.
+![Glossary term definition](images/gloss-lookup-2.gif)
 
-For example:
+Or hold `Option` and hover over the term to preview its definition.
+![Glossary term preview](images/gloss-lookup-1.gif)
 
-This extension contributes the following settings:
+This also works for bios.
+![Biography lookup](images/bio-lookup.gif)
 
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
 
-## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+## Set up.
+
+Clone this repo and put it in your `$HOME/.vscode/extensions/` folder.
+
+Change into this directory and run `npm install`.
+
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
-
 ### 1.0.0
+Initial Release. Has features for Step Definition Lookup and Gloss/Bio Definition Lookup.
 
-Initial release of ...
+## TODO List
+- Remove/Improve Log Statements
+- add camelCase to hyphen-format function
+- add a Keyboard shortcut for the Step Finder.
 
-### 1.0.1
 
-Fixed issue #.
 
-### 1.1.0
-
-Added features X, Y, and Z.
-
------------------------------------------------------------------------------------------------------------
-
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (macOS) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
