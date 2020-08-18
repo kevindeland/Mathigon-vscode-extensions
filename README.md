@@ -19,6 +19,21 @@ You can also hold `Option` (Mac) or `Ctrl` (PC) and hover the mouse over the ID 
 
 ![feature Step ID Definition](images/medians-content-2.gif)
 
+#### From functions.ts to content.md
+You can also go the other way, from the function to the ID in content.md, with the same key combinations. However, you must make some extra clicks because the function will also point to itself as a definition.
+
+![Function to content ID](images/medians-functions-1.gif)
+
+#### Within-step Jumping
+If you are in the middle of a step (in content.md) or a function (in functions.ts), you can jump to the complementary location in the other file by using the __Mathigon Step Finder__ command. Press `Command`+`Shift`+`P` (Mac) or (whatever the PC combo is) to open the command menu. Then type/navigate to "Mathigon Step Finder" and click or press enter, and you will jump to the other file.
+
+From content to functions.
+![Jump from content to functions.](images/command-1.gif)
+
+From functions to content.
+![Jump from content to functions.](images/command-2.gif)
+
+
 
 ### Glossary Definition Lookup.
 When editing a *content.md* markdown file, you can use the [Go to Definition](https://code.visualstudio.com/Docs/editor/editingevolved#_go-to-definition) command to jump to or preview a term's definition in the glossary.
