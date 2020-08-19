@@ -2,9 +2,15 @@
 
 This is an Extension for [Visual Studio Code](https://code.visualstudio.com/) to help navigate the code for [Mathigon textbooks](https://github.com/mathigon/textbooks).
 
+## Set up.
+
+Clone this repo into your vscode extensions folder. Depending on your platform, the location is in the following folder:
+- Windows: `%USERPROFILE%\.vscode\extensions`
+- macOS: `~/.vscode/extensions`
+- Linux: `~/.vscode/extensions`
+
 
 ## Features
-
 
 ### Step Definition Jumping
 When editing a *content.md* markdown file, you can use the [Go to Definition](https://code.visualstudio.com/Docs/editor/editingevolved#_go-to-definition) command on a Step's ID to navigate to the function where that Step's JavaScript defined. 
@@ -47,11 +53,6 @@ Or hold `Option` and hover over the term to preview its definition.
 This also works for bios.
 ![Biography lookup](images/bio-lookup.gif)
 
-
-
-## Set up.
-
-Clone this repo and put it in your `$HOME/.vscode/extensions/` folder.
 
 Change into this directory and run `npm install`.
 
