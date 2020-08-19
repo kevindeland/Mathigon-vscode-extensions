@@ -187,13 +187,6 @@ export function activate(context: vscode.ExtensionContext) {
 
 	});
 
-
-	vscode.languages.registerHoverProvider('typescript', {
-		provideHover(doc: vscode.TextDocument) {
-			return new vscode.Hover(`Mission Accomplished`);
-		}
-	})
-
 	context.subscriptions.push(filename, markdownDef, typescriptDef, glossDef);
 }
 export function deactivate() {}
