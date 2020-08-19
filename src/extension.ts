@@ -11,7 +11,7 @@ export function activate(context: vscode.ExtensionContext) {
 	 * If in content.md, looks for containing `id` and goes to function with the same name.
 	 * If in functions.ts, looks for containing exported `function` and goes to markdown section with same name.
 	 */
-	let filename = vscode.commands.registerCommand('helloworld.stepFinder', () => {
+	let filename = vscode.commands.registerCommand('mathigon.stepFinder', () => {
 		const editor = vscode.window.activeTextEditor;
 
 		const document = editor?.document!;
