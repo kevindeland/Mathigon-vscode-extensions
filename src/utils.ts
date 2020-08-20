@@ -79,9 +79,19 @@ function idMarkdownToTypescript(id: string): string {
  * @param id
  */
 function idTypescriptToMarkdown(id: string): string {
-  // TODO: this is needed for IDs with more than one word.
+  let hyphenated = '';
 
-  return 'TODO';
+  for (let i=0; i < id.length; i++) {
+    const thisChar = id.charAt(i);
+    if (thisChar.toUpperCase() === thisChar) {
+      hyphenated += '-' + thisChar.toLowerCase();
+    } else {
+      hyphenated += thisChar;
+    }
+  }
+
+  // TODO: this would be a lot better with a unit test
+  return hyphenated;
 }
 
 /**
@@ -125,7 +135,8 @@ export function findIdRangeInFunctions(doc: vscode.TextDocument, id: string): vs
  */
 export function findIdRangeInContent(doc: vscode.TextDocument, id: string): vscode.Range {
 
-  const searchText: RegExp = new RegExp(`${SEARCH.contentId}\s*(${id})`);
+  const idMd = idTypescriptToMarkdown(id);
+  const searchText: RegExp = new RegExp(`${SEARCH.contentId}\s*(${idMd})`);
   console.log(searchText);
 
   let lineNum = 0, currentLine, find;
