@@ -4,7 +4,13 @@ import { findFunctionsSectionId, findContentSectionId,
 	findIdRangeInFunctions, findIdRangeInContent,
 	findYamlDefRange } from './utils';
 
+import { ContentTreeProvider } from './contentTree';
+
 export function activate(context: vscode.ExtensionContext) {
+
+	// Sample of `window.registerTreeDataProvider`
+	const contentTreeProvider = new ContentTreeProvider(context);
+	vscode.window.registerTreeDataProvider('contentExplorer', contentTreeProvider);
 
 	/**
 	 * Switch between content.md to functions.ts, and jump to complementary location in code.

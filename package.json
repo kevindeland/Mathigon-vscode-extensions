@@ -12,7 +12,8 @@
 	"activationEvents": [
 		"onCommand:mathigon.stepFinder",
 		"onLanguage:markdown",
-		"onLanguage:typescript"
+		"onLanguage:typescript",
+		"onView:contentExplorer"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -21,7 +22,26 @@
 				"command": "mathigon.stepFinder",
 				"title": "Mathigon Step Finder"
 			}
-		]
+		],
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "content-explorer",
+					"title": "Content Explorer",
+					"icon": "icons/dep.svg"
+				}
+			]
+		},
+		"views": {
+			"content-explorer": [
+				{
+					"id": "contentExplorer",
+					"name": "Content Explorer",
+					"icon": "icons/dep.svg",
+					"contextualTitle": "CE"
+				}
+			]
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
