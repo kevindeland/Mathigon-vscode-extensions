@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
 
 export class ContentTreeProvider implements vscode.TreeDataProvider<ContentItem> {
 
@@ -63,6 +64,21 @@ export class ContentTreeProvider implements vscode.TreeDataProvider<ContentItem>
     // TODO: complete
   }
 
+  private getIcon(label: string): any {
+    switch (label) {
+      case 'header':
+        return {
+          light: this.context.asAbsolutePath(path.join('icons', 'light', 'header.svg')),
+          dark:  this.context.asAbsolutePath(path.join('icons', 'dark', 'header.svg'))
+        }
+      case 'step':
+        return {
+          light: this.context.asAbsolutePath(path.join('icons', 'light', 'step.svg')),
+          dark:  this.context.asAbsolutePath(path.join('icons', 'dark', 'step.svg'))
+        }
+    }
+  }
+
   private parseHeaders() {
     this.headers = [];
 
@@ -89,6 +105,7 @@ export class ContentTreeProvider implements vscode.TreeDataProvider<ContentItem>
           title: '',
           arguments: [new vscode.Position(i, 0)]
         }
+        treeItem.iconPath = this.getIcon('header');
 
         currentHeader = treeItem;
         this.headers.push(treeItem);
@@ -102,6 +119,7 @@ export class ContentTreeProvider implements vscode.TreeDataProvider<ContentItem>
           title: '',
           arguments: [new vscode.Position(i, 0)]
         }
+        step.iconPath = this.getIcon('step');
 
         if (currentHeader) {
           currentHeader.childSteps.push(step);

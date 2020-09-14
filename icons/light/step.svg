@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Slice</title>
+    <g id="LOGO" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" font-family="InriaSans-Regular, Inria Sans" font-size="7" font-weight="normal">
+        <g id="id" fill="#63142A">
+            <text id="&gt;-id">
+                <tspan x="2.016" y="11">&gt; id:</tspan>
+            </text>
+        </g>
+    </g>
+</svg>
