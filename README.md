@@ -9,6 +9,8 @@ Clone this repo into your vscode extensions folder. Depending on your platform, 
 - macOS: `~/.vscode/extensions`
 - Linux: `~/.vscode/extensions`
 
+Change into this directory and run `npm install`.
+
 
 ## Features
 
@@ -53,8 +55,11 @@ Or hold `Option` and hover over the term to preview its definition.
 This also works for bios.
 ![Biography lookup](images/bio-lookup.gif)
 
+### Content Navigator Sidebar
+When any `content.md` file is open, you can select the Mathigon sidebar to show an outline navigator. The current options are the Top-Level chapters (H2 Headers) and the steps within each chatper (> id: xyz).
 
-Change into this directory and run `npm install`.
+![TreeView in sidebar](images/treeview.gif)
+
 
 
 ## Release Notes
@@ -66,6 +71,11 @@ Initial Release. Has features for Step Definition Lookup and Gloss/Bio Definitio
 - Remove/Improve Log Statements
 - add camelCase to hyphen-format function
 - add a Keyboard shortcut for the Step Finder.
+- Option to auto-generate a new function in `functions.ts` when you click on an id w/o a matching function.
+- try `> id: sphere-maps` in Circles, it doesn't work.
+
+## Wish List
+- Learn to do this as an [IntelliJ plugin](https://www.baeldung.com/intellij-new-custom-plugin), for IntelliJ users like Philipp.
 
 
 
