@@ -35,6 +35,11 @@ export class ContentTreeProvider implements vscode.TreeDataProvider<ContentItem>
     }
   }
 
+  select(position: vscode.Position) {
+    this.editor!.selection = new vscode.Selection(position, position);
+    // can try fiddling with different RevealTypes. If it's a header, I think AtTop is best
+    this.editor!.revealRange(new vscode.Range(position, position), vscode.TextEditorRevealType.AtTop);
+  }
 
   private onActiveEditorChanged(): void {
 
@@ -69,10 +74,15 @@ export class ContentTreeProvider implements vscode.TreeDataProvider<ContentItem>
       currentLine = this.doc.lineAt(i).text;
       const headerBegin = '## ';
       if(currentLine.startsWith(headerBegin)) {
-        this.headers.push(
-          new TopLevelHeader(
-            currentLine.substring(headerBegin.length), 
-            new vscode.Position(i, 0)));
+        const treeItem: TopLevelHeader = new TopLevelHeader(
+          currentLine.substring(headerBegin.length),
+          new vscode.Position(i, 0));
+        treeItem.command = {
+          command: 'extension.navigateToContent',
+          title: '',
+          arguments: [new vscode.Position(i, 0)]
+        }
+        this.headers.push(treeItem);
       }
 
     }
@@ -97,6 +107,6 @@ export class TopLevelHeader extends ContentItem {
     public readonly label: string,
     private position: vscode.Position,
   ) {
-    super(label, vscode.TreeItemCollapsibleState.Collapsed)
+    super(label, vscode.TreeItemCollapsibleState.None)
   }
 }

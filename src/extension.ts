@@ -11,6 +11,7 @@ export function activate(context: vscode.ExtensionContext) {
 	// Sample of `window.registerTreeDataProvider`
 	const contentTreeProvider = new ContentTreeProvider(context);
 	vscode.window.registerTreeDataProvider('contentExplorer', contentTreeProvider);
+	vscode.commands.registerCommand('extension.navigateToContent', position => contentTreeProvider.select(position));
 
 	/**
 	 * Switch between content.md to functions.ts, and jump to complementary location in code.
