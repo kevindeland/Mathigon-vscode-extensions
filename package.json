@@ -28,7 +28,7 @@
 				{
 					"id": "content-explorer",
 					"title": "Content Explorer",
-					"icon": "icons/dep.svg"
+					"icon": "icons/logo.svg"
 				}
 			]
 		},
@@ -37,7 +37,7 @@
 				{
 					"id": "contentExplorer",
 					"name": "Content Explorer",
-					"icon": "icons/dep.svg",
+					"icon": "icons/logo.svg",
 					"contextualTitle": "CE"
 				}
 			]
